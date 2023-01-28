@@ -66,21 +66,6 @@ static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 	system_os_post(procTaskPrio, 0, 0 );
 }
 
-/**
- * This is a timer set up in user_main() which is called every 100ms, forever
- * @param arg unused
- */
-static void ICACHE_FLASH_ATTR timer100ms(void *arg)
-{
-	CSTick( 1 ); // Send a one to uart
-
-    uint32 button_status = 0;
-    button_status = GPIO_INPUT_GET(BUTTON_NUM);
-
-    // GPIO_OUTPUT_SET(LED_NUM, button_status);
-    // GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(LED_NUM)); // - didn't work
-}
-
 void buttonISR(void *data)
 {
     struct button_info *button = (struct button_info*) data;
@@ -197,34 +182,17 @@ void ICACHE_FLASH_ATTR user_init(void)
 	// Initialize the UART
 	uart_init(BIT_RATE_115200, BIT_RATE_115200);
 
-	os_printf("\r\nesp82XX Web-GUI\r\n%s\b", VERSSTR);
-
-	//Uncomment this to force a system restore.
-	//	system_restore();
-
-	// Load settings and pre-initialize common services
-	CSSettingsLoad( 0 );
-	CSPreInit();
-	// Initialize common settings
-	CSInit( 0 );
-
+	os_printf("\r\nesp82XX \r\n%s\b", VERSSTR);
 
     button_isr_init();
 
     PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, LED_PIN); // pin D6 on NodeMCU
-    // GPIO_DIS_OUTPUT(BUTTON_PIN);
-    // gpio_output_set(0, 0, 0, BIT14);
-
-	// Set timer100ms to be called every 100ms
-	os_timer_disarm(&some_timer);
-	os_timer_setfn(&some_timer, (os_timer_func_t *)timer100ms, NULL);
-	os_timer_arm(&some_timer, 100, 1);
 
 	os_printf( "Boot Ok.\n" );
 
 	// Set the wifi sleep type
-	wifi_set_sleep_type(LIGHT_SLEEP_T);
-	wifi_fpm_set_sleep_type(LIGHT_SLEEP_T);
+	// wifi_set_sleep_type(LIGHT_SLEEP_T);
+	// wifi_fpm_set_sleep_type(LIGHT_SLEEP_T);
 
 	// Add a process and start it
 	system_os_task(procTask, procTaskPrio, procTaskQueue, procTaskQueueLen);
