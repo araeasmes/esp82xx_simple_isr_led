@@ -52,20 +52,6 @@ static os_timer_t some_timer;
  * Functions
  *============================================================================*/
 
-/**
- * This task is called constantly. The ESP can't handle infinite loops in tasks,
- * so this task will post to itself when finished, in essence looping forever
- *
- * @param events unused
- */
-static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
-{
-    CSTick( 0 );
-
-    // Post the task in order to have it called again
-    system_os_post(procTaskPrio, 0, 0 );
-}
-
 void buttonISR(void *data)
 {
     struct button_info *button = (struct button_info*) data;
@@ -122,32 +108,6 @@ button_isr_init()
     ETS_GPIO_INTR_ENABLE();
 }
 
-
-void buttonChange() {
-    uint32 in_reg = GPIO_REG_READ(GPIO_IN_ADDRESS);
-    os_printf("%u", in_reg);
-
-    GPIO_OUTPUT_SET(LED_NUM, GPIO_INPUT_GET(BUTTON_NUM));
-}
-
-/**
- * This callback is registered with espconn_regist_recvcb and is called whenever
- * a UDP packet is received
- *
- * @param arg pointer corresponding structure espconn. This pointer may be
- *            different in different callbacks, please don’t use this pointer
- *            directly to distinguish one from another in multiple connections,
- *            use remote_ip and remote_port in espconn instead.
- * @param pusrdata received data entry parameters
- * @param len      received data length
- */
-static void ICACHE_FLASH_ATTR udpserver_recv(void *arg, char *pusrdata, unsigned short len)
-{
-    struct espconn *pespconn = (struct espconn *)arg;
-
-    uart0_sendStr("X");
-}
-
 /**
  * UART RX handler, called by the uart task. Currently does nothing
  *
@@ -189,14 +149,6 @@ void ICACHE_FLASH_ATTR user_init(void)
     PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, LED_PIN); // pin D6 on NodeMCU
 
     os_printf( "Boot Ok.\n" );
-
-    // Set the wifi sleep type
-    // wifi_set_sleep_type(LIGHT_SLEEP_T);
-    // wifi_fpm_set_sleep_type(LIGHT_SLEEP_T);
-
-    // Add a process and start it
-    system_os_task(procTask, procTaskPrio, procTaskQueue, procTaskQueueLen);
-    system_os_post(procTaskPrio, 0, 0 );
 }
 
 /**
