@@ -60,10 +60,10 @@ static os_timer_t some_timer;
  */
 static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 {
-	CSTick( 0 );
+    CSTick( 0 );
 
-	// Post the task in order to have it called again
-	system_os_post(procTaskPrio, 0, 0 );
+    // Post the task in order to have it called again
+    system_os_post(procTaskPrio, 0, 0 );
 }
 
 void buttonISR(void *data)
@@ -143,9 +143,9 @@ void buttonChange() {
  */
 static void ICACHE_FLASH_ATTR udpserver_recv(void *arg, char *pusrdata, unsigned short len)
 {
-	struct espconn *pespconn = (struct espconn *)arg;
+    struct espconn *pespconn = (struct espconn *)arg;
 
-	uart0_sendStr("X");
+    uart0_sendStr("X");
 }
 
 /**
@@ -155,7 +155,7 @@ static void ICACHE_FLASH_ATTR udpserver_recv(void *arg, char *pusrdata, unsigned
  */
 void ICACHE_FLASH_ATTR charrx( uint8_t c )
 {
-	//Called from UART.
+    //Called from UART.
 }
 
 /**
@@ -164,13 +164,13 @@ void ICACHE_FLASH_ATTR charrx( uint8_t c )
  */
 void user_rf_pre_init(void)
 {
-	; // nothing
+    ; // nothing
 }
 
 
 void ICACHE_FLASH_ATTR user_pre_init(void)
 {
-	LoadDefaultPartitionMap(); //You must load the partition table so the NONOS SDK can find stuff.
+    LoadDefaultPartitionMap(); //You must load the partition table so the NONOS SDK can find stuff.
 }
 
 /**
@@ -179,24 +179,24 @@ void ICACHE_FLASH_ATTR user_pre_init(void)
  */
 void ICACHE_FLASH_ATTR user_init(void)
 {
-	// Initialize the UART
-	uart_init(BIT_RATE_115200, BIT_RATE_115200);
+    // Initialize the UART
+    uart_init(BIT_RATE_115200, BIT_RATE_115200);
 
-	os_printf("\r\nesp82XX \r\n%s\b", VERSSTR);
+    os_printf("\r\nesp82XX \r\n%s\b", VERSSTR);
 
     button_isr_init();
 
     PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, LED_PIN); // pin D6 on NodeMCU
 
-	os_printf( "Boot Ok.\n" );
+    os_printf( "Boot Ok.\n" );
 
-	// Set the wifi sleep type
-	// wifi_set_sleep_type(LIGHT_SLEEP_T);
-	// wifi_fpm_set_sleep_type(LIGHT_SLEEP_T);
+    // Set the wifi sleep type
+    // wifi_set_sleep_type(LIGHT_SLEEP_T);
+    // wifi_fpm_set_sleep_type(LIGHT_SLEEP_T);
 
-	// Add a process and start it
-	system_os_task(procTask, procTaskPrio, procTaskQueue, procTaskQueueLen);
-	system_os_post(procTaskPrio, 0, 0 );
+    // Add a process and start it
+    system_os_task(procTask, procTaskPrio, procTaskQueue, procTaskQueueLen);
+    system_os_post(procTaskPrio, 0, 0 );
 }
 
 /**
@@ -206,7 +206,7 @@ void ICACHE_FLASH_ATTR user_init(void)
  */
 void ICACHE_FLASH_ATTR EnterCritical(void)
 {
-	;
+    ;
 }
 
 /**
@@ -215,5 +215,5 @@ void ICACHE_FLASH_ATTR EnterCritical(void)
  */
 void ICACHE_FLASH_ATTR ExitCritical(void)
 {
-	;
+    ;
 }
